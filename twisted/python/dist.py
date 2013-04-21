@@ -367,8 +367,19 @@ class build_ext_twisted(build_ext.build_ext):
             self.define_macros = [("WIN32", 1)]
         else:
             self.define_macros = []
+
+        # standards(5) man page
+        # X/Open CAE To build or compile an application that conforms to one
+        # of the X/Open CAE specifications, use the following guidelines.
+        # Applications need not set the POSIX feature test macros if they
+        # require both CAE and POSIX functionality.
+        if sys.platform.startswith('sunos'):
+            self.define_macros.append(('_XOPEN_SOURCE', 1))
+            self.define_macros.append(('_XOPEN_SOURCE_EXTENDED', 1))
+
         self.extensions = [x for x in self.conditionalExtensions
                            if x.condition(self)]
+
         for ext in self.extensions:
             ext.define_macros.extend(self.define_macros)
 
